@@ -1,0 +1,78 @@
+name: Cross-Platform Build
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run tests
+        run: bun test
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        include:
+          # Linux x64
+          - bun-target: bun-linux-x64
+            chrome-platform: linux64
+            artifact-suffix: linux-x64
+
+          # Linux ARM64
+          - bun-target: bun-linux-arm64
+            chrome-platform: linux64
+            artifact-suffix: linux-arm64
+
+          # Windows x64
+          - bun-target: bun-windows-x64-modern
+            chrome-platform: win64
+            artifact-suffix: win64
+
+          # macOS x64
+          - bun-target: bun-darwin-x64
+            chrome-platform: mac-x64
+            artifact-suffix: mac-x64
+
+          # macOS ARM64
+          - bun-target: bun-darwin-arm64
+            chrome-platform: mac-arm64
+            artifact-suffix: mac-arm64
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Download Chrome for platform
+        run: bun run build/chrome-download.ts --platform=${{ matrix.chrome-platform }}
+
+      - name: Get short SHA
+        id: sha
+        run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Build executable
+        run: bun build --compile --target=${{ matrix.bun-target }} --minify --sourcemap src/main.ts --outfile pupprinteer-${{ steps.sha.outputs.sha }}-${{ matrix.artifact-suffix }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pupprinteer-${{ steps.sha.outputs.sha }}-${{ matrix.artifact-suffix }}
+          path: pupprinteer-${{ steps.sha.outputs.sha }}-${{ matrix.artifact-suffix }}${{ matrix.artifact-suffix == 'win64' && '.exe' || '' }}
+

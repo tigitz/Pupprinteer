@@ -18,7 +18,7 @@ program
   .name('Pupprinteer')
   .description('Convert HTML to PDF using Puppeteer as a single standalone binary')
   .version('0.0.1')
-  .requiredOption('-i, --input <path>', 'Path to local HTML file or remote URL to convert')
+  .requiredOption('-f, --file <path>', 'Path to local HTML file or remote URL to convert')
   .option('-o, --output <path>', 'Destination path where the PDF file will be saved')
   .option('-v, --verbose', 'Enable detailed debug logging output', false)
   .option(
@@ -26,7 +26,7 @@ program
     'Custom Chrome browser executable path (uses bundled Chrome if not specified)',
   )
   .option(
-    '-w, --wait <milliseconds>',
+    '-t, --timeout <milliseconds>',
     'Additional time to wait in milliseconds after page load completes',
     '0'
   )
@@ -49,7 +49,6 @@ program
   .option('--preferCSSPageSize', 'Give any CSS @page size declared in the page priority')
   .option('--margin <string>', 'Paper margins, format: "top,right,bottom,left" in pixels or with units')
   .option('--omitBackground', 'Hide default white background')
-  .option('--timeout <number>', 'Timeout in milliseconds')
 
 async function main(): Promise<void> {
   try {
@@ -73,10 +72,10 @@ async function main(): Promise<void> {
 
     const pdfService = new PdfService(options.executable || chromeBinary);
     await pdfService.generatePdf(
-      options.input,
+      options.file,
       options.output,
       finalSettings,
-      options.wait ? parseInt(options.wait) : 0
+      options.timeout ? parseInt(options.timeout) : 0
     );
   } catch (error) {
     logger.error('Error generating PDF:', error);

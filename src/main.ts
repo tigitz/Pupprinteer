@@ -8,6 +8,7 @@ import filenamifyUrl from "filenamify-url";
 
 import chromeArchive from "../chrome/chrome.zip" with { type: "file" };
 import chromeVersion from "../chrome/version.txt" with { type: "file" };
+import { PdfService } from './pdf-service';
 
 let chromeBinary: string;
 

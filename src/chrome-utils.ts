@@ -28,14 +28,15 @@ export function detectPlatform(): ChromePlatform {
 
 export function getChromeExecutablePath(basePath: string, platform: ChromePlatform): string {
   if (platform === 'win64' || platform === 'win32') {
-    return join(basePath, 'chrome-headless-shell.exe');
+    return join(getChromeFolderPath(basePath,platform ), 'chrome-headless-shell.exe');
   }
-  return join(basePath, 'chrome-headless-shell-linux64', 'chrome-headless-shell');
+  return join(getChromeFolderPath(basePath,platform ), 'chrome-headless-shell-linux64', 'chrome-headless-shell');
 }
 
 export function getChromeFolderPath(basePath: string, platform: ChromePlatform): string {
+  //@TODO handle mac too
   if (platform === 'win64' || platform === 'win32') {
-    return basePath;
+    return join(basePath, 'chrome-headless-shell-win64');
   }
   return join(basePath, 'chrome-headless-shell-linux64');
 }

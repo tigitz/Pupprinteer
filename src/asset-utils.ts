@@ -1,8 +1,9 @@
 import { join } from "path";
 import os from "os";
-import { mkdir, unlink } from "node:fs/promises";
+import { mkdir, unlink, readFile } from "node:fs/promises";
 import extract from "extract-zip";
 import { logger } from './logger';
+import { file } from "bun";
 import { detectPlatform, getChromeExecutablePath, getChromeFolderPath } from './chrome-utils';
 
 
@@ -38,19 +39,24 @@ export async function extractChromeToTemp(zipPath: string, versionPath: string):
   logger.info('Bundled Chrome version:', bundledVersion.trim());
 
   // Check if we need to extract
-  try {
-    const previousVersion = await Bun.file(versionFile).text();
-    logger.info('Found existing Chrome version:', previousVersion.trim());
+  const versionFileExists = await Bun.file(versionFile).exists();
+  if (versionFileExists) {
+    try {
+      const previousVersion = await Bun.file(versionFile).text();
+      logger.info('Found existing Chrome version:', previousVersion.trim());
 
-    if (previousVersion.trim() === bundledVersion.trim()) {
-      const execExists = await Bun.file(execPath).exists();
-      if (execExists) {
-        logger.success('Using existing Chrome binary - skipping extraction');
-        return execPath;
+      if (previousVersion.trim() === bundledVersion.trim()) {
+        const execExists = await Bun.file(execPath).exists();
+        if (execExists) {
+          logger.success('Using existing Chrome binary - skipping extraction');
+          return execPath;
+        }
       }
+    } catch (error) {
+      logger.debug('Error reading version file:', error);
     }
-  } catch (error) {
-    logger.debug('No existing version found or error reading version file');
+  } else {
+    logger.debug('No existing version file found');
   }
 
   // Extract new version

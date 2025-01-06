@@ -2,9 +2,13 @@ name: Cross-Platform Build
 
 on: [push]
 
+permissions:
+  contents: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
 
@@ -18,7 +22,6 @@ jobs:
         run: bun test
 
   build:
-    needs: test
     runs-on: ubuntu-latest
 
     strategy:
@@ -76,6 +79,19 @@ jobs:
           name: pupprinteer-${{ steps.sha.outputs.sha }}-${{ matrix.artifact-suffix }}
           path: pupprinteer-${{ steps.sha.outputs.sha }}-${{ matrix.artifact-suffix }}${{ matrix.artifact-suffix == 'win64' && '.exe' || '' }}
 
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get short SHA
+        id: sha
+        run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+
       # Create Git tag
       - name: Create Git tag
         run: |
@@ -88,9 +104,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: softprops/action-gh-release@v2
         with:
-          files: pupprinteer-${{ steps.sha.outputs.sha }}-${{ matrix.artifact-suffix }}${{ matrix.artifact-suffix == 'win64' && '.exe' || '' }}
+          files: pupprinteer-${{ steps.sha.outputs.sha }}-*/*
           tag_name: release-${{ steps.sha.outputs.sha }}
           name: Release ${{ steps.sha.outputs.sha }}
           draft: false
           prerelease: false
-

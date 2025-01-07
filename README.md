@@ -21,24 +21,27 @@ The binary is self-contained and requires no additional installation steps.
 
 Basic usage:
 ```bash
-./pupprinteer -i input.html -o output.pdf
+./pupprinteer -f input.html -o output.pdf
 ```
 
 Converting a URL to PDF:
 ```bash
-./pupprinteer -i https://example.com -o example.pdf
+./pupprinteer -f https://example.com -o example.pdf
 ```
 
 ### Options
 
-- `-i, --input <path>` - Path to local HTML file or remote URL (required)
-- `-o, --output <path>` - Destination path for PDF file (optional)
-- `-v, --verbose` - Enable detailed debug logging
-- `-e, --chrome-executable <path>` - Custom Chrome executable path
-- `-w, --wait <milliseconds>` - Additional wait time after page load
-- `-p, --pdf-settings <json>` - Base PDF settings as JSON
+Required:
+- `-f, --file <path>` - Path to local HTML file or remote URL to convert
 
-PDF-specific options:
+Optional:
+- `-o, --output <path>` - Destination path where the PDF file will be saved
+- `-v, --verbose` - Enable detailed debug logging output
+- `-e, --chrome-executable <path>` - Custom Chrome browser executable path
+- `-t, --timeout <milliseconds>` - Additional time to wait after page load completes
+- `-p, --pdf-settings <json>` - Base PDF settings as JSON (will be overridden by specific options)
+
+PDF Settings Options:
 - `--scale <number>` - Scale of the webpage rendering
 - `--displayHeaderFooter` - Display header and footer
 - `--headerTemplate <string>` - HTML template for the print header
@@ -47,9 +50,11 @@ PDF-specific options:
 - `--landscape` - Paper orientation
 - `--pageRanges <string>` - Paper ranges to print (e.g., "1-5, 8, 11-13")
 - `--format <string>` - Paper format (letter, legal, tabloid, ledger, a0-a6)
-- `--width <string>` - Paper width with units
-- `--height <string>` - Paper height with units
-- `--margin <string>` - Paper margins ("top,right,bottom,left")
+- `--width <string>` - Paper width, accepts values labeled with units
+- `--height <string>` - Paper height, accepts values labeled with units
+- `--preferCSSPageSize` - Give any CSS @page size declared in the page priority
+- `--margin <string>` - Paper margins, format: "top,right,bottom,left" in pixels or with units
+- `--omitBackground` - Hide default white background
 
 ## How It Works
 

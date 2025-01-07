@@ -28,14 +28,14 @@ jobs:
       matrix:
         include:
           # Linux x64
-          - bun-target: bun-linux-x64
-            chrome-platform: linux64
-            artifact-suffix: linux-x64
-
-          # Linux ARM64
-          - bun-target: bun-linux-arm64
-            chrome-platform: linux64
-            artifact-suffix: linux-arm64
+#          - bun-target: bun-linux-x64
+#            chrome-platform: linux64
+#            artifact-suffix: linux-x64
+#
+#          # Linux ARM64
+#          - bun-target: bun-linux-arm64
+#            chrome-platform: linux64
+#            artifact-suffix: linux-arm64
 
           # Windows x64
           - bun-target: bun-windows-x64-modern
@@ -43,14 +43,14 @@ jobs:
             artifact-suffix: win64
 
           # macOS x64
-          - bun-target: bun-darwin-x64
-            chrome-platform: mac-x64
-            artifact-suffix: mac-x64
-
-          # macOS ARM64
-          - bun-target: bun-darwin-arm64
-            chrome-platform: mac-arm64
-            artifact-suffix: mac-arm64
+#          - bun-target: bun-darwin-x64
+#            chrome-platform: mac-x64
+#            artifact-suffix: mac-x64
+#
+#          # macOS ARM64
+#          - bun-target: bun-darwin-arm64
+#            chrome-platform: mac-arm64
+#            artifact-suffix: mac-arm64
 
     steps:
       - uses: actions/checkout@v4

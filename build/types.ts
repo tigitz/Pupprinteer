@@ -1,31 +1,31 @@
 interface DownloadInfo {
-  platform: string;
-  url: string;
+  platform: string
+  url: string
 }
 
 interface Downloads {
-  chrome: DownloadInfo[];
-  chromedriver: DownloadInfo[];
-  'chrome-headless-shell': DownloadInfo[];
+  'chrome': DownloadInfo[]
+  'chromedriver': DownloadInfo[]
+  'chrome-headless-shell': DownloadInfo[]
 }
 
 interface Channel {
-  channel: 'Stable' | 'Beta' | 'Dev' | 'Canary';
-  version: string;
-  revision: string;
-  downloads: Downloads;
+  channel: 'Stable' | 'Beta' | 'Dev' | 'Canary'
+  version: string
+  revision: string
+  downloads: Downloads
 }
 
 interface Channels {
-  Stable: Channel;
-  Beta: Channel;
-  Dev: Channel;
-  Canary: Channel;
+  Stable: Channel
+  Beta: Channel
+  Dev: Channel
+  Canary: Channel
 }
 
 interface ChromeVersionsResponse {
-  timestamp: string;
-  channels: Channels;
+  timestamp: string
+  channels: Channels
 }
 
-export type { ChromeVersionsResponse };
+export type { ChromeVersionsResponse }

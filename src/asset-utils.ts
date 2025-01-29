@@ -1,10 +1,9 @@
 import { join } from "path";
 import os from "os";
-import { mkdir, unlink, readFile } from "node:fs/promises";
+import { mkdir, unlink } from "node:fs/promises";
 import extract from "extract-zip";
 import { logger } from './logger';
-import { file } from "bun";
-import { detectPlatform, getChromeExecutablePath, getChromeFolderPath } from './chrome-utils';
+import { detectPlatform, getChromeExecutablePath } from './chrome-utils';
 
 
 export async function extractChromeToTemp(zipPath: string, versionPath: string): Promise<string> {

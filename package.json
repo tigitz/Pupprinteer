@@ -8,12 +8,13 @@
   },
   "devDependencies": {
     "@eslint/js": "~9.10.0",
+    "@types/bun": "^1.2.1",
     "@types/eslint__js": "~8.42.3",
-    "@types/node": "~20.17.10",
+    "@types/node": "~20.17.16",
     "@types/signale": "^1.4.7",
     "@typescript-eslint/parser": "~8.5.0",
     "@vitest/coverage-v8": "~2.1.8",
-    "@vitest/eslint-plugin": "~1.1.21",
+    "@vitest/eslint-plugin": "~1.1.25",
     "esbuild": "^0.24.2",
     "eslint": "~9.10.0",
     "eslint-config-prettier": "~9.1.0",
@@ -45,9 +46,9 @@
   "author": "tigitz <tigitz@users.noreply.github.com>",
   "license": "MIT",
   "dependencies": {
-    "@sindresorhus/slugify": "^2.2.1",
+    "@commander-js/extra-typings": "^12.1.0",
     "commander": "^12.1.0",
-    "consola": "^3.3.3",
+    "consola": "^3.4.0",
     "extract-zip": "^2.0.1",
     "filenamify-url": "^3.1.0",
     "puppeteer-core": "^23.11.1"

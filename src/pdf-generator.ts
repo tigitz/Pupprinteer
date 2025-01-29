@@ -1,26 +1,40 @@
-import puppeteer, { PDFOptions } from "puppeteer-core";
+import puppeteer, {type PDFOptions } from "puppeteer-core";
 import { resolve } from "path";
 import { logger } from './logger';
 import filenamifyUrl from "filenamify-url";
 
-export class PdfService {
+export class PdfGenerator {
   constructor(private readonly chromeBinary: string) {}
 
   async generatePdf(
     input: string,
     output?: string,
     pdfSettings: PDFOptions = {},
-    waitTime: number = 0
+    waitTime: number = 0,
+    injectJs?: string,
+    injectCss?: string,
+    debugOptions?: {
+      headful?: boolean;
+      devtools?: boolean;
+      slowMo?: number;
+      debugPort?: number;
+    }
   ): Promise<string> {
     logger.start('Launching browser...');
+
     const browser = await puppeteer.launch({
       executablePath: this.chromeBinary,
+      headless: !debugOptions?.headful,
+      devtools: debugOptions?.devtools,
+      slowMo: debugOptions?.slowMo,
+      args: debugOptions?.debugPort ? [`--remote-debugging-port=${debugOptions.debugPort}`] : undefined
     });
 
     try {
       logger.success('Browser launched successfully');
       logger.start('Opening new page...');
       const page = await browser.newPage();
+      await page.setBypassCSP(true);
 
       const url = input.startsWith('http://') || input.startsWith('https://')
         ? input
@@ -29,8 +43,19 @@ export class PdfService {
       logger.start(`Navigation to: ${url}`);
       await page.goto(url, {
         waitUntil: 'networkidle0',
+        timeout: 30000
       });
       logger.success('Page loaded successfully');
+
+      if (injectCss) {
+        logger.start('Injecting custom CSS...');
+        await page.addStyleTag({ content: injectCss });
+      }
+
+      if (injectJs) {
+        logger.start('Injecting JavaScript...');
+        await page.addScriptTag({ content: injectJs });
+      }
 
       if (waitTime > 0) {
         logger.start(`Waiting for ${waitTime}ms...`);

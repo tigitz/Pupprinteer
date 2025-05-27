@@ -1,26 +1,17 @@
 name: Cross-Platform Build
 
-on: [push]
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-
-      - name: Install dependencies
-        run: bun install
-
-      - name: Run tests
-        run: bun test
-
   build:
-    needs: test
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
         include:
@@ -63,16 +54,32 @@ jobs:
       - name: Download Chrome for platform
         run: bun run build/chrome-download.ts --platform=${{ matrix.chrome-platform }}
 
-      - name: Get short SHA
-        id: sha
-        run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-
       - name: Build executable
-        run: bun build --compile --target=${{ matrix.bun-target }} --minify --sourcemap src/main.ts --outfile pupprinteer-${{ steps.sha.outputs.sha }}-${{ matrix.artifact-suffix }}
+        run: bun build --compile --target=${{ matrix.bun-target }} --minify --sourcemap src/main.ts --outfile pupprinteer-${{ github.ref_name }}-${{ matrix.artifact-suffix }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: pupprinteer-${{ steps.sha.outputs.sha }}-${{ matrix.artifact-suffix }}
-          path: pupprinteer-${{ steps.sha.outputs.sha }}-${{ matrix.artifact-suffix }}${{ matrix.artifact-suffix == 'win64' && '.exe' || '' }}
+          name: pupprinteer-${{ github.ref_name }}-${{ matrix.artifact-suffix }}
+          path: pupprinteer-${{ github.ref_name }}-${{ matrix.artifact-suffix }}${{ matrix.artifact-suffix == 'win64' && '.exe' || '' }}
 
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+
+      # Create GitHub Release
+      - name: Create Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v2
+        with:
+          files: pupprinteer-${{ github.ref_name }}-*/*
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false

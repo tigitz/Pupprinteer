@@ -1,0 +1,3 @@
+- It's a bun project, use the Bun native functions and idioms when possible
+- Always use return early coding style
+- Update the documentation in the README.md if necessary and provided

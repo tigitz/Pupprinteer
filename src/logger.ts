@@ -3,34 +3,44 @@ import { createConsola } from 'consola'
 class Logger {
   private consola = createConsola({
     level: 3, // Default level
-  });
+  })
 
   setVerbose(verbose: boolean): void {
     this.consola = createConsola({
       level: verbose ? 4 : 3, // Level 4 includes debug messages
-    });
+    })
   }
 
-  debug(...args: any[]): void {
-    this.consola.debug(...args);
+  setQuiet(quiet: boolean): void {
+    this.consola = createConsola({
+      level: quiet ? 0 : 3, // Level 0 disables all logging
+    })
   }
 
-  info(...args: any[]): void {
-    this.consola.info(...args);
+  debug(...args: unknown[]): void {
+    this.consola.debug(...args)
   }
 
-  start(...args: any[]): void {
-    this.consola.start(...args);
+  info(...args: unknown[]): void {
+    this.consola.info(...args)
   }
 
-  success(...args: any[]): void {
-    this.consola.success(...args);
+  start(...args: unknown[]): void {
+    this.consola.start(...args)
   }
 
-  error(...args: any[]): void {
-    this.consola.error(...args);
+  success(...args: unknown[]): void {
+    this.consola.success(...args)
+  }
+
+  warn(...args: unknown[]): void {
+    this.consola.warn(...args)
+  }
+
+  error(...args: unknown[]): void {
+    this.consola.error(...args)
   }
 }
 
 // Create and export a single instance
-export const logger = new Logger();
+export const logger = new Logger()

@@ -15,7 +15,7 @@ import { cleanupTestDirectory, createTestDirectory, createTestVersionFile } from
 describe('Asset Extraction Utilities', () => {
   let testDir: string
 
-  const fixtureZipPath = path.join(__dirname, '..', 'fixtures', 'chrome-linux.zip')
+  const fixtureZipPath = path.join(__dirname, 'fixtures', 'chrome-linux.zip')
 
   beforeEach(() => {
     testDir = createTestDirectory('chrome-extract-test')

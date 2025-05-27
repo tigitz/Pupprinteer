@@ -44,14 +44,14 @@ describe('PDF Generation', () => {
   })
 
   test('should generate PDF from HTML file', async () => {
-    const inputPath = `${import.meta.dir}/../fixtures/hello.html`
-    const outputPath = `${import.meta.dir}/../fixtures/output.pdf`
+    const inputPath = `${import.meta.dir}/fixtures/hello.html`
+    const outputPath = `${import.meta.dir}/fixtures/output.pdf`
     await verifyPdfGeneration(page, inputPath, outputPath)
   })
 
   test('should generate PDF from URL', async () => {
     const inputUrl = 'http://httpbin.org/html'
-    const outputPath = `${import.meta.dir}/../fixtures/output-url.pdf`
+    const outputPath = `${import.meta.dir}/fixtures/output-url.pdf`
     await verifyPdfGeneration(page, inputUrl, outputPath)
   })
 })

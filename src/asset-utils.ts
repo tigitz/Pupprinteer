@@ -101,7 +101,8 @@ export async function extractChromeZip(
     try {
       await unlink(paths.tempZipPath)
       logger.debug('Temporary zip file cleaned up')
-    } catch (error) {
+    }
+    catch (error) {
       logger.warn('Failed to clean up temporary zip file:', error)
     }
 

@@ -3,7 +3,7 @@ import type { FileExtension } from '../types'
 import type { GlobalOptions } from './global.ts'
 import { createCommand } from '@commander-js/extra-typings'
 import { logger } from '../logger'
-import { determineOutputPath, preparePage } from '../page-utils'
+import { determineOutputPath, loadContent, preparePage } from '../page-utils'
 import { handleGlobalOpts } from './global.ts'
 
 export function buildScreenshotCommand() {
@@ -84,8 +84,8 @@ async function handleScreenshotCommand(globalOpts: GlobalOptions, cmdOptions: Sc
     screenshotSettings.encoding = cmdOptions.encoding
   }
 
-  const injectJs = globalOpts.injectJs ? await Bun.file(globalOpts.injectJs).text() : undefined
-  const injectCss = globalOpts.injectCss ? await Bun.file(globalOpts.injectCss).text() : undefined
+  const injectJs = globalOpts.injectJs ? await loadContent(globalOpts.injectJs) : undefined
+  const injectCss = globalOpts.injectCss ? await loadContent(globalOpts.injectCss) : undefined
 
   const page = await browser.newPage()
   await page.setBypassCSP(true)

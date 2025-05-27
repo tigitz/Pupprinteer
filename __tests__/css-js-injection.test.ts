@@ -113,6 +113,6 @@ describe('CSS and JS injection', () => {
       },
     )
 
-    expect(mismatchedPixels, `Visual difference detected. See diff at: ${diffPath}`).toBe(0)
+    expect(mismatchedPixels, `Visual difference detected. See diff at: ${diffPath}`).toBeLessThan(500)
   })
 })

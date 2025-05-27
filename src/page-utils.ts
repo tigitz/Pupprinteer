@@ -24,7 +24,7 @@ export async function loadContent(path: string): Promise<string> {
       throw error
     }
   }
-  
+
   // Handle as local file
   logger.debug(`Loading content from file: ${path}`)
   try {

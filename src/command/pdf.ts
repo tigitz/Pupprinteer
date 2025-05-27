@@ -2,7 +2,7 @@ import type { Browser, Page, PaperFormat, PDFOptions } from 'puppeteer-core'
 import type { GlobalOptions } from './global.ts'
 import { createCommand } from '@commander-js/extra-typings'
 import { logger } from '../logger'
-import { determineOutputPath, preparePage, loadContent } from '../page-utils'
+import { determineOutputPath, loadContent, preparePage } from '../page-utils'
 import { handleGlobalOpts } from './global.ts'
 
 interface PdfCommandOptions {

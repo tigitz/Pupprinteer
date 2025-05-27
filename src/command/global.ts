@@ -67,6 +67,6 @@ export function addDefaultOptions(program: Command): Command {
       '-e, --chrome-executable <path>',
       'Custom Chrome browser executable path (uses bundled Chrome if not specified)',
     )
-    .option('--inject-js <path>', 'Path to JavaScript file to inject after page load')
-    .option('--inject-css <path>', 'Path to CSS file to inject after page load')
+    .option('--inject-js <path>', 'Path to JavaScript file or URL to inject after page load')
+    .option('--inject-css <path>', 'Path to CSS file or URL to inject after page load')
 }

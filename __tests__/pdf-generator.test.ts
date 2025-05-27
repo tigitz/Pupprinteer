@@ -50,8 +50,8 @@ describe('PDF Generation', () => {
   })
 
   test('should generate PDF from URL', async () => {
-    const inputUrl = 'http://httpbin.org/html'
+    const inputUrl = 'https://example.com'
     const outputPath = `${import.meta.dir}/fixtures/output-url.pdf`
     await verifyPdfGeneration(page, inputUrl, outputPath)
-  })
+  }, 10000) // Increase timeout to 10 seconds
 })

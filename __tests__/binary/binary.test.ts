@@ -37,7 +37,6 @@ if (!process.argv.some(arg => arg.includes('binary.test.ts'))) {
   })
 }
 else {
-
   describe('Binary Integration Tests', () => {
     let binaryPath: string | null = null
 
@@ -102,10 +101,10 @@ else {
         JS_PATH,
         '--display-header-footer',
         '--print-background',
-        '-v'
+        '-v',
       ], {
         stdout: 'inherit',
-        stderr: 'inherit'
+        stderr: 'inherit',
       })
 
       const pdfExitCode = await pdfProcess.exited
@@ -145,10 +144,10 @@ else {
         '--inject-js',
         JS_PATH,
         '--full-page',
-        '-v'
+        '-v',
       ], {
         stdout: 'inherit',
-        stderr: 'inherit'
+        stderr: 'inherit',
       })
 
       const screenshotExitCode = await screenshotProcess.exited

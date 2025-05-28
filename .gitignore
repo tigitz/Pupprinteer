@@ -6,6 +6,10 @@ npm-debug.log*
 # Dependencies
 node_modules/
 
+# Tests
+__tests__/binary/bin
+!__tests__/binary/bin/.gitkeep
+
 # Coverage
 coverage
 

@@ -1,6 +1,7 @@
+import fs from 'node:fs'
 import { mkdir, unlink } from 'node:fs/promises'
 import os from 'node:os'
-import { join } from 'node:path'
+import path, { join } from 'node:path'
 import extract from 'extract-zip'
 import { detectPlatform, getChromeExecutablePath } from './chrome-utils'
 import { logger } from './logger'
@@ -109,6 +110,30 @@ export async function extractChromeZip(
     const execExists = await Bun.file(paths.execPath).exists()
     if (!execExists) {
       logger.error(`Chrome executable not found at expected path: ${paths.execPath}`)
+
+      // List directory contents after extraction to debug
+      function listDirRecursive(dir, indent = '') {
+        let result = ''
+        const items = fs.readdirSync(dir)
+
+        for (const item of items) {
+          const itemPath = path.join(dir, item)
+          const stats = fs.statSync(itemPath)
+
+          result += `${indent}${item} (${stats.isDirectory() ? 'directory' : 'file'})\n`
+
+          if (stats.isDirectory()) {
+            result += listDirRecursive(itemPath, `${indent}  `)
+          }
+        }
+
+        return result
+      }
+
+      // List all files in the extraction directory
+      const dirContents = listDirRecursive(paths.tempDir)
+      logger.debug(`Directory contents of ${paths.tempDir}:\n${dirContents}`)
+
       throw new Error('Chrome executable not found after extraction')
     }
 

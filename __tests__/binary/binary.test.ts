@@ -37,7 +37,7 @@ if (!process.argv.some(arg => arg.includes('binary.test.ts'))) {
   })
 }
 else {
-  describe('Binary Integration Tests', { timeout: 15000 }, () => {
+  describe('Binary Integration Tests', () => {
     let binaryPath: string | null = null
 
     // Setup: Find the binary
@@ -125,7 +125,7 @@ else {
       const pdfHeader = new Uint8Array(pdfContent.slice(0, 4))
       const headerText = new TextDecoder().decode(pdfHeader)
       expect(headerText).toBe('%PDF')
-    })
+    }, 15000)
 
     it('should generate a screenshot with injected CSS/JS', async () => {
       // Skip if binary not found
@@ -190,6 +190,6 @@ else {
         logger.info('Generated screenshot can be used as reference. Copy it with:')
         logger.info(`cp ${SCREENSHOT_OUTPUT} ${REFERENCE_SCREENSHOT}`)
       }
-    })
+    }, 15000)
   })
 }

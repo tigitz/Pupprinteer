@@ -79,9 +79,9 @@ jobs:
           - os: windows-latest
             artifact-suffix: win64
           - os: macos-latest-large
-            artifact-suffix: mac-arm64
-          - os: macos-latest
             artifact-suffix: mac-x64
+          - os: macos-latest
+            artifact-suffix: mac-arm64
     steps:
       - uses: actions/checkout@v4
 

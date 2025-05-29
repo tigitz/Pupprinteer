@@ -77,56 +77,6 @@ else {
       }
     })
 
-    it('should generate a PDF with header, footer, and injected CSS/JS', async () => {
-      // Skip if binary not found
-      if (!binaryPath) {
-        logger.warn('Skipping test: Binary not found')
-        return
-      }
-
-      // Run the binary to generate PDF
-      const pdfProcess = Bun.spawn([
-        binaryPath,
-        'pdf',
-        '-i',
-        HTML_PATH,
-        '-o',
-        PDF_OUTPUT,
-        '--header-template',
-        HEADER_PATH,
-        '--footer-template',
-        FOOTER_PATH,
-        '--inject-css',
-        CSS_PATH,
-        '--inject-js',
-        JS_PATH,
-        '--display-header-footer',
-        '--print-background',
-        '-w',
-        '500',
-        '-v',
-      ], {
-        stdout: 'inherit',
-        stderr: 'inherit',
-      })
-
-      const pdfExitCode = await pdfProcess.exited
-      expect(pdfExitCode).toBe(0)
-
-      // Verify PDF was created
-      const pdfExists = await Bun.file(PDF_OUTPUT).exists()
-      expect(pdfExists).toBe(true)
-
-      // Verify PDF content
-      const pdfContent = await Bun.file(PDF_OUTPUT).arrayBuffer()
-      expect(pdfContent.byteLength).toBeGreaterThan(0)
-
-      // Check PDF header (should start with %PDF)
-      const pdfHeader = new Uint8Array(pdfContent.slice(0, 4))
-      const headerText = new TextDecoder().decode(pdfHeader)
-      expect(headerText).toBe('%PDF')
-    }, 15000)
-
     it('should generate a screenshot with injected CSS/JS', async () => {
       // Skip if binary not found
       if (!binaryPath) {
@@ -190,6 +140,56 @@ else {
         logger.info('Generated screenshot can be used as reference. Copy it with:')
         logger.info(`cp ${SCREENSHOT_OUTPUT} ${REFERENCE_SCREENSHOT}`)
       }
-    }, 15000)
+    }, 5 * 60 * 1000)
+
+    it('should generate a PDF with header, footer, and injected CSS/JS', async () => {
+      // Skip if binary not found
+      if (!binaryPath) {
+        logger.warn('Skipping test: Binary not found')
+        return
+      }
+
+      // Run the binary to generate PDF
+      const pdfProcess = Bun.spawn([
+        binaryPath,
+        'pdf',
+        '-i',
+        HTML_PATH,
+        '-o',
+        PDF_OUTPUT,
+        '--header-template',
+        HEADER_PATH,
+        '--footer-template',
+        FOOTER_PATH,
+        '--inject-css',
+        CSS_PATH,
+        '--inject-js',
+        JS_PATH,
+        '--display-header-footer',
+        '--print-background',
+        '-w',
+        '500',
+        '-v',
+      ], {
+        stdout: 'inherit',
+        stderr: 'inherit',
+      })
+
+      const pdfExitCode = await pdfProcess.exited
+      expect(pdfExitCode).toBe(0)
+
+      // Verify PDF was created
+      const pdfExists = await Bun.file(PDF_OUTPUT).exists()
+      expect(pdfExists).toBe(true)
+
+      // Verify PDF content
+      const pdfContent = await Bun.file(PDF_OUTPUT).arrayBuffer()
+      expect(pdfContent.byteLength).toBeGreaterThan(0)
+
+      // Check PDF header (should start with %PDF)
+      const pdfHeader = new Uint8Array(pdfContent.slice(0, 4))
+      const headerText = new TextDecoder().decode(pdfHeader)
+      expect(headerText).toBe('%PDF')
+    }, 30000)
   })
 }

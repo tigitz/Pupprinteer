@@ -102,6 +102,8 @@ else {
         JS_PATH,
         '--display-header-footer',
         '--print-background',
+        '-w',
+        '500',
         '-v',
       ], {
         stdout: 'inherit',
@@ -145,6 +147,8 @@ else {
         '--inject-js',
         JS_PATH,
         '--full-page',
+        '-w',
+        '500',
         '-v',
       ], {
         stdout: 'inherit',

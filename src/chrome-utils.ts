@@ -39,9 +39,12 @@ export function getChromeExecutablePath(basePath: string, platform: ChromePlatfo
 }
 
 export function getChromeFolderPath(basePath: string, platform: ChromePlatform): string {
-  // @TODO handle mac too
   if (platform === 'win64' || platform === 'win32') {
     return join(basePath, 'chrome-headless-shell-win64')
+  }
+  
+  if (platform === 'mac-arm64' || platform === 'mac-x64') {
+    return join(basePath, 'chrome-headless-shell-mac')
   }
 
   return join(basePath, 'chrome-headless-shell-linux64')

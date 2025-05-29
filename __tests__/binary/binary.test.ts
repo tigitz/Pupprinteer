@@ -49,14 +49,15 @@ else {
       }
 
       const files = readdirSync(BINARY_DIR)
+      const pupprinteerFiles = files.filter(file => file.startsWith('pupprinteer'))
 
-      if (files.length === 0) {
-        logger.warn('No binary found in the binary directory. Please run download-binary.ts first.')
+      if (pupprinteerFiles.length === 0) {
+        logger.warn('No pupprinteer binary found in the binary directory. Please run download-binary.ts first.')
         return
       }
 
-      // Use the first binary found
-      binaryPath = join(BINARY_DIR, files[0])
+      // Use the first pupprinteer binary found
+      binaryPath = join(BINARY_DIR, pupprinteerFiles[0])
       logger.info(`Using binary: ${binaryPath}`)
     })
 

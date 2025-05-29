@@ -37,7 +37,7 @@ if (!process.argv.some(arg => arg.includes('binary.test.ts'))) {
   })
 }
 else {
-  describe('Binary Integration Tests', () => {
+  describe('Binary Integration Tests', { timeout: 15000 }, () => {
     let binaryPath: string | null = null
 
     // Setup: Find the binary

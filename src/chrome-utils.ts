@@ -31,11 +31,13 @@ export function detectPlatform(): ChromePlatform {
 }
 
 export function getChromeExecutablePath(basePath: string, platform: ChromePlatform): string {
+  const folderPath = getChromeFolderPath(basePath, platform)
+  
   if (platform === 'win64' || platform === 'win32') {
-    return join(getChromeFolderPath(basePath, platform), 'chrome-headless-shell.exe')
+    return join(folderPath, 'chrome-headless-shell.exe')
   }
 
-  return join(getChromeFolderPath(basePath, platform), 'chrome-headless-shell')
+  return join(folderPath, 'chrome-headless-shell')
 }
 
 export function getChromeFolderPath(basePath: string, platform: ChromePlatform): string {
@@ -43,8 +45,12 @@ export function getChromeFolderPath(basePath: string, platform: ChromePlatform):
     return join(basePath, 'chrome-headless-shell-win64')
   }
   
-  if (platform === 'mac-arm64' || platform === 'mac-x64') {
-    return join(basePath, 'chrome-headless-shell-mac')
+  if (platform === 'mac-arm64') {
+    return join(basePath, 'chrome-headless-shell-mac-arm64')
+  }
+  
+  if (platform === 'mac-x64') {
+    return join(basePath, 'chrome-headless-shell-mac-x64')
   }
 
   return join(basePath, 'chrome-headless-shell-linux64')

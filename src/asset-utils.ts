@@ -107,34 +107,64 @@ export async function extractChromeZip(
       logger.warn('Failed to clean up temporary zip file:', error)
     }
 
+    // List directory contents after extraction to debug
+    function listDirRecursive(dir, indent = '') {
+      let result = ''
+      const items = fs.readdirSync(dir)
+
+      for (const item of items) {
+        const itemPath = path.join(dir, item)
+        const stats = fs.statSync(itemPath)
+
+        result += `${indent}${item} (${stats.isDirectory() ? 'directory' : 'file'})\n`
+
+        if (stats.isDirectory()) {
+          result += listDirRecursive(itemPath, `${indent}  `)
+        }
+      }
+
+      return result
+    }
+
+    // List all files in the extraction directory
+    const dirContents = listDirRecursive(paths.tempDir)
+    logger.debug(`Directory contents of ${paths.tempDir}:\n${dirContents}`)
+
     const execExists = await Bun.file(paths.execPath).exists()
     if (!execExists) {
       logger.error(`Chrome executable not found at expected path: ${paths.execPath}`)
 
-      // List directory contents after extraction to debug
-      function listDirRecursive(dir, indent = '') {
-        let result = ''
+      // Try to find the chrome-headless-shell executable in the extracted directory
+      let foundExecutable = ''
+      function findExecutable(dir) {
         const items = fs.readdirSync(dir)
-
         for (const item of items) {
           const itemPath = path.join(dir, item)
           const stats = fs.statSync(itemPath)
 
-          result += `${indent}${item} (${stats.isDirectory() ? 'directory' : 'file'})\n`
+          if (stats.isFile() && item === 'chrome-headless-shell') {
+            foundExecutable = itemPath
+            return true
+          }
 
-          if (stats.isDirectory()) {
-            result += listDirRecursive(itemPath, `${indent}  `)
+          if (stats.isDirectory() && findExecutable(itemPath)) {
+            return true
           }
         }
-
-        return result
+        return false
       }
 
-      // List all files in the extraction directory
-      const dirContents = listDirRecursive(paths.tempDir)
-      logger.debug(`Directory contents of ${paths.tempDir}:\n${dirContents}`)
+      findExecutable(paths.tempDir)
 
-      throw new Error('Chrome executable not found after extraction')
+      if (foundExecutable) {
+        logger.info(`Found Chrome executable at: ${foundExecutable}`)
+        logger.info(`Expected path was: ${paths.execPath}`)
+        logger.info('Using the found executable instead')
+        paths.execPath = foundExecutable
+      }
+      else {
+        throw new Error('Chrome executable not found after extraction')
+      }
     }
 
     const execContent = await Bun.file(paths.execPath).arrayBuffer()
